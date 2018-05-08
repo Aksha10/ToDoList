@@ -1,0 +1,109 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+	width: 40%;
+	border-radius: 2px;
+	background-color: rgb(235, 235, 235);
+	border:1px solid rgb(216, 216, 216);
+	margin:0 auto;
+}
+
+h2 {
+	text-align: center;
+}
+
+p {
+	padding-left: 10px;
+	font-size: 20px;
+}
+
+.taskTextBox {
+	width: 73%;
+	border-radius: 2px;
+	padding: 10px;
+	border: 1px solid rgb(216, 216, 216);
+	color: rgb(88, 88, 88);
+	outline: none;
+}
+
+.addButton {
+	background-color: rgb(72, 99, 187);
+	border:1px solid  rgb(72, 99, 187);
+	border-radius: 2px;
+	color: white;
+	font-weight: bold;
+	padding: 9px 20px ;
+	outline: none;
+}
+
+#warning {
+	font-size: small;
+	color: red;
+}
+
+li {
+	list-style-type: none;
+	background-color: white;
+	border:1px solid rgb(216, 216, 216);
+	color: rgb(88, 88, 88);
+	padding: 5px;
+	width: 91%;
+}
+
+.close {
+	cursor: pointer;
+	background-color: rgb(219, 70, 70);
+	border: 1px solid rgb(219, 70, 70);
+	color: white;
+	outline: none;
+	float : right;
+	font-weight: bold;
+}
+
+.clearfix::after {
+	content: "";
+    clear: both;
+}
+
+.buttons {
+	text-align: center;
+}
+
+.allbtns {
+	border-radius: 2px;
+	outline: none;
+	padding: 5px;
+	color: white;
+	font-weight: bold;
+}
+
+.allbtns:hover , .addButton:hover{
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.13);
+}  
+
+.markallBtn {
+	background-color: rgb(230, 166, 106);
+	border: 1px solid rgb(230, 166, 106);
+}
+
+.activeBtn {
+	background-color: rgb(84, 155, 236) ;
+	border: 1px solid rgb(84, 155, 236);
+}
+
+.completedBtn {
+	background-color: rgb(76, 182, 80);
+	border: 1px solid rgb(74, 182, 80);
+}
+
+.clrBtn {
+	background-color: rgb(224, 203, 15);
+	border: 1px solid rgb(224, 203, 15);
+}
+
+.liMarkAll {
+	background-color: rgb(230, 166, 106);
+	color: white;
+}
