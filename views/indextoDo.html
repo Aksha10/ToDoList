@@ -24,15 +24,13 @@
 			<button class="clrBtn allbtns" type="button">Clear Completed</button>
 		</div>
 		<ul id="ulItem" class="clearfix">
-			<p>
 				<% for(var i=0; i < todojsontxt.length; i++) {%>
 					<li>
 						<input class="checkbox" type="checkbox">
-						<span class="input"><%= todojsontxt[i].todo %></span> 
+						<span class="input" data-id="<%= todojsontxt[i].id %>"><%= todojsontxt[i].name %></span> 
 						<button class="close" type="button">&times;</button>
 					</li>
 				<% } %>
-			</p>
 		</ul>
 	</div>
 	<script src="./js/scripttodo.js"></script>
