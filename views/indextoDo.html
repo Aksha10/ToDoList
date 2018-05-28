@@ -15,23 +15,41 @@
 		<p id="warning"></p>
 		<p>Task:
 			<input class="taskTextBox" id="inputtxt" type="text" placeholder="Add Task.." name="Task">
-			<button class="addButton" type="button" onclick="newListItem()">Add</button>
+			<button class="addButton" type="button">Add</button>
 		</p>
 		<div class="buttons">
-			<button class="activeBtn allbtns" type="button">Active</button>
+			<button class="allBtn allbtns" type="button">All Task</button>			
 			<button class="markallBtn allbtns" type="button">Mark All Completed</button>
+			<button class="unmarkallBtn allbtns" type="button">Unmark All</button>		
+			<button class="activeBtn allbtns" type="button">Active</button>	
 			<button class="completedBtn allbtns" type="button">Completed</button>
 			<button class="clrBtn allbtns" type="button">Clear Completed</button>
 		</div>
-		<ul id="ulItem" class="clearfix">
+		<div class="allTask">
+			<ul id="ulItem" class="clearfix">
 				<% for(var i=0; i < todojsontxt.length; i++) {%>
-					<li>
-						<input class="checkbox" type="checkbox">
-						<span class="input" data-id="<%= todojsontxt[i].id %>"><%= todojsontxt[i].name %></span> 
-						<button class="close" type="button">&times;</button>
-					</li>
+					<% if(todojsontxt[i].status == true){ %>
+						<li class="liMarkAll">
+							<input class="checkbox" type="checkbox" checked><input class="input liMarkAll" data-id="<%=todojsontxt[i].id %>" value="<%=todojsontxt[i].name %>">
+							<button class="close" type="button">&times;</button>
+						</li>
+					<% } else{ %>
+						<li>
+							<input class="checkbox" type="checkbox"><input class="input" data-id="<%=todojsontxt[i].id %>" value="<%=todojsontxt[i].name%>">
+							<button class="close" type="button">&times;</button>
+						</li>
+					<% } %>
 				<% } %>
-		</ul>
+			</ul>
+		</div>
+		<div>
+			<ul class="activeTask disp">
+			</ul>	
+		</div>
+		<div >
+			<ul class="completeTask disp">
+			</ul>
+		</div>
 	</div>
 	<script src="./js/scripttodo.js"></script>
 </body>

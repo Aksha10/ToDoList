@@ -1,0 +1,13 @@
+<% if(todojsontxt.status == true){ %>
+	<li>
+		<input class="checkbox" type="checkbox">
+		<span class="input liMarkAll" data-id="<%= todojsontxt[i].id %>"><%= todojsontxt[i].name %></span> 
+		<button class="close" type="button">&times;</button>
+	</li>
+<% } else{ %>  
+	<li>
+			<input class="checkbox" type="checkbox">
+			<span class="input" data-id="<%= todojsontxt[i].id %>"><%= todojsontxt[i].name %></span> 
+			<button class="close" type="button">&times;</button>
+		</li>
+<% } %>
