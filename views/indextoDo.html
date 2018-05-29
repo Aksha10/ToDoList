@@ -30,7 +30,7 @@
 				<% for(var i=0; i < todojsontxt.length; i++) {%>
 					<% if(todojsontxt[i].status == true){ %>
 						<li class="liMarkAll">
-							<input class="checkbox" type="checkbox" checked><input class="input liMarkAll" data-id="<%=todojsontxt[i].id %>" value="<%=todojsontxt[i].name %>">
+							<input class="checkbox" type="checkbox" checked><input class="input liMarkAll" data-id="<%=todojsontxt[i].id %>" value="<%=todojsontxt[i].name %>" readonly>
 							<button class="close" type="button">&times;</button>
 						</li>
 					<% } else{ %>

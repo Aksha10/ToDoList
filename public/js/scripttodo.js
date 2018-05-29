@@ -11,7 +11,7 @@ $(document).ready(function () {
 	$(".addButton").click(function(){
 		
 		var li = $("<li></li>");  
-		var inputValue = $("#inputtxt").val();
+		var inputValue = $("#inputtxt").val().trim();
 		var data = { data: inputValue };
 		if(inputValue.trim() == ""){
 			$("#warning").text("Warning: Please enter valid input value");
@@ -25,7 +25,7 @@ $(document).ready(function () {
 				url: 'http://localhost:3001/addNewTask',
 				success: function (data) {	
 					console.log(data);				
-					$("#ulItem").append("<li><input class='checkbox' type='checkbox'/><input class='input' data-id="+data.id+"   value="+JSON.stringify(data.name)+"><button class='close' type='button'>&times;</button></li>")	
+					$("#ulItem").append("<li><input class='checkbox' type='checkbox'/><input class='input' data-id="+data.id+" value="+JSON.stringify(data.name)+"><button class='close' type='button'>&times;</button></li>")	
 					$(".taskTextBox").val("");				
 				},
 				error: function(err) {

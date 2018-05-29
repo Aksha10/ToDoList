@@ -1,5 +1,5 @@
-const fs = require('fs');
-var path = require('path');
+const fs = require('fs')
+var path = require('path')
 
 /**
  * @function getData(callback)
@@ -7,27 +7,34 @@ var path = require('path');
  * @param {function} callback 
 */
 function getData(callback) {
-	fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8',function (err, data) {
-		if (err) throw err;
-		callback(JSON.parse(data))
-	});
+	return new Promise(function(resolve, reject) {
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8',function (err, data) {
+			if (err) reject(err)
+			resolve(JSON.parse(data))
+		});
+	})
 }
 /**
  * @function addnewtask(taskCallback)
  * @description callback function for addnewtask function
  * @param {function} taskCallback 
 */
-function addnewtask(taskCallback) {
-	var taskid = Math.floor(Math.random() * 26) + Date.now();
-	var arrObj = require('../todolist.json')
-	var tempObj = {
-		name: newTask,
-		id: taskid,
-		status: false
-	}
-	arrObj.push(tempObj)
-	write(arrObj)
-	taskCallback(tempObj)
+function addnewtask(newTask, taskCallback) {
+	return new Promise(function(resolve, reject) {
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8',function (err, data) {
+			if (err) reject(err);
+			var taskid = Math.floor(Math.random() * 26) + Date.now()
+			var arrObj = JSON.parse(data)
+			var tempObj = {
+				name: newTask,
+				id: taskid,
+				status: false
+			}
+			arrObj.push(tempObj)
+			write(arrObj)
+			resolve(tempObj)
+		});
+	})	
 }
 /**
  * @function deleteTask(delText,deleteCallback)
@@ -35,17 +42,19 @@ function addnewtask(taskCallback) {
  * @param {function} delText, deleteCallback 
 */
 function deleteTask(delText, deleteCallback) {
-	fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) {
-		if (err) throw err
-		parseObj = JSON.parse(data);
-		removeElement = parseObj.filter(function(element) {
-			if(element.id!=delText){
-				return element
-			}
-		})	
-		write(removeElement);
-		deleteCallback(removeElement);
-	});
+	return new Promise(function(resolve, reject) {
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) {
+			if (err) reject(err)
+			parseObj = JSON.parse(data)
+			removeElement = parseObj.filter(function(element) {
+				if(element.id!=delText){
+					return element
+				}
+			})	
+			write(removeElement)
+			resolve(removeElement)
+		});
+	})
 }
 /**
  * @function mark(idStatus,markCallback)
@@ -53,21 +62,23 @@ function deleteTask(delText, deleteCallback) {
  * @param {function} idStatus, markCallback 
 */
 function mark(idStatus, markCallback) {
-	fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) {
-	if(err) throw err
-	parseArray = JSON.parse(data);
-	function changeStatus(idStatus) {		
-		for (var i in parseArray) {
-			if (parseArray[i].id == idStatus) {
-				parseArray[i].status = !parseArray[i].status;	
-				break; //Stop this loop, we found it!
+	return new Promise(function(resolve, reject){
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) {
+			if(err) reject(err)
+			parseArray = JSON.parse(data)
+			function changeStatus(idStatus) {		
+				for (var i in parseArray) {
+					if (parseArray[i].id == idStatus) {
+						parseArray[i].status = !parseArray[i].status	
+						break; //Stop this loop, we found it!
+					}
+				}
 			}
-		}
-	}
-	changeStatus(idStatus);
-	write(parseArray)
-	markCallback(parseArray);
-})	 
+			changeStatus(idStatus)
+			write(parseArray)
+			resolve(parseArray)
+		});
+	}) 
 }
 /**
  * @function markall(markallCallback)
@@ -75,15 +86,17 @@ function mark(idStatus, markCallback) {
  * @param {function} markallCallback 
 */
 function markall(markallCallback) {
-fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) {
-	if(err) throw err
-	parseArrayObj = JSON.parse(data);
-		parseArrayObj.forEach(function(element) {
-			element.status = true				
-		});	
-	write(parseArrayObj)
-	markallCallback(parseArrayObj)
-});
+	return new Promise(function(resolve, reject) {
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) {
+			if(err) reject(err)
+			parseArrayObj = JSON.parse(data)
+				parseArrayObj.forEach(function(element) {
+					element.status = true				
+				});	
+			write(parseArrayObj)
+			resolve(parseArrayObj)
+		});
+	})
 }
 /**
  * @function unmarkall(unmarkallCallback)
@@ -91,15 +104,17 @@ fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, da
  * @param {function} unmarkallCallback 
 */
 function unmarkall(unmarkallCallback) {
-	fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) {
-		if(err) throw err
-		arrayParse = JSON.parse(data);
-		arrayParse.forEach(function(element) {
+	return new Promise(function(resolve, reject) {
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) {
+			if(err) reject(err)
+			arrayParse = JSON.parse(data)
+			arrayParse.forEach(function(element) {
 				element.status = false				
 			});	
-		write(arrayParse)
-		unmarkallCallback(arrayParse)
+			write(arrayParse)
+			resolve(arrayParse)
 		});
+	})
 }
 /**
  * @function clrtask(clrtaskCallback)
@@ -107,17 +122,19 @@ function unmarkall(unmarkallCallback) {
  * @param {function} clrtaskCallback 
 */
 function clrtask(clrtaskCallback) {
-	fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) { 
-		if(err) throw err
-		clearParse = JSON.parse(data);
-		clearTask = clearParse.filter(function(element) {
-			if(element.status != true) {
-				return element
-			}
+	return new Promise(function(resolve, reject) {
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) { 
+			if(err) reject(err)
+			clearParse = JSON.parse(data)
+			clearTask = clearParse.filter(function(element) {
+				if(element.status != true) {
+					return element
+				}
+			});	
+			write(clearTask)
+			resolve(clearTask)
 		});	
-		write(clearTask)
-		clrtaskCallback(clearTask)
-	});	
+	})	
 }
 /**
  * @function activetask(activeCallback)
@@ -125,15 +142,17 @@ function clrtask(clrtaskCallback) {
  * @param {function} activeCallback 
 */
 function activetask(activeCallback) {
-	fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) { 
-		if(err) throw err
-		activeParse = JSON.parse(data)
-		actvTask = activeParse.filter(function(element) {
-			if(element.status == false){
-				return element;
-			}
-		}) 
-		activeCallback(actvTask)	
+	return new Promise(function(resolve, reject) {
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) { 
+			if(err) reject(err)
+			activeParse = JSON.parse(data)
+			actvTask = activeParse.filter(function(element) {
+				if(element.status == false){
+					return element
+				}
+			}) 
+			resolve(actvTask)	
+		});
 	})
 }
 /**
@@ -142,16 +161,18 @@ function activetask(activeCallback) {
  * @param {function} completeCallback 
 */
 function completeTask(completeCallback) {
-	fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) { 
-		if(err) throw err
-		completeParse = JSON.parse(data)
-		cmpltTask = completeParse.filter(function(element) {
-			if(element.status == true){
-				return element;
-			}
-		}) 
-		completeCallback(cmpltTask)		
-	})
+	return new Promise(function(resolve, reject) {
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) { 
+			if(err) reject(err)
+			completeParse = JSON.parse(data)
+			cmpltTask = completeParse.filter(function(element) {
+				if(element.status == true){
+					return element
+				}
+			}) 
+			resolve(cmpltTask)		
+		});
+	})	
 }
 /**
  * @function inputTask(updateId,updateInput,inputCallback)
@@ -159,21 +180,23 @@ function completeTask(completeCallback) {
  * @param {function} updateId, updateInput, inputCallback 
 */
 function inputTask(updateId, updateInput, inputCallback) {
-	fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) { 
-		if(err) throw err
-		inputParse = JSON.parse(data)
-		function changeName(updateId, updateInput) {			
-			for (var i in inputParse) {
-				if (inputParse[i].id == updateId) {
-					inputParse[i].name = updateInput.name ;		
-					break; //Stop this loop, we found it!
+	return new Promise(function(resolve, reject){
+		fs.readFile(path.join(__dirname, '../todolist.json'), 'utf-8', function (err, data) { 
+			if(err) reject(err)
+			inputParse = JSON.parse(data)
+			function changeName(updateId, updateInput) {			
+				for (var i in inputParse) {
+					if (inputParse[i].id == updateId) {
+						inputParse[i].name = updateInput.name	
+						break; //Stop this loop, we found it!
+					}
 				}
 			}
-		}
-		changeName(updateId, updateInput);
-		write(inputParse)
-		inputCallback(updateInput);
-	});
+			changeName(updateId, updateInput)
+			write(inputParse)
+			resolve(updateInput)
+		});
+	})
 }
 
 function write(writeData) {
