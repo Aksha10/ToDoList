@@ -151,13 +151,11 @@ $(document).ready(function () {
 			success: function(complete) {		
 				for(i= 0; i<complete.length; i++) {
 					var li = $("<li></li>"); 
-					$(".completeTask").append("<li><input class='checkbox' type='checkbox' checked/><input class='input' data-id="+complete[i].id+" value ="+JSON.stringify(complete[i].name)+"><button class='close' type='button'>&times;</button></li>")								
+					$(".completeTask").append("<li class='liMarkAll'><input class='checkbox liMarkAll' type='checkbox' checked/><input class='input liMarkAll' data-id="+complete[i].id+" value ="+JSON.stringify(complete[i].name)+" readonly><button class='close' type='button'>&times;</button></li>")								
 				}
 				$(".activeTask").addClass("disp")
 				$(".allTask").addClass("disp")
-				$(".completeTask").removeClass("disp")
-				$(".completeTask li").addClass("liMarkAll")
-				$(".completeTask input").addClass("liMarkAll").attr('readonly',true)			
+				$(".completeTask").removeClass("disp")	
 			},
 			error: function(err){
 				console.log("err", err);
@@ -208,3 +206,4 @@ $(document).ready(function () {
 			}
 	 	}); 
 });
+

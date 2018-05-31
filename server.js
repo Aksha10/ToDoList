@@ -7,7 +7,7 @@ const express = require('express'); //Accessing builtin "express" module
 const port = process.env.PORT || 3001; //listening port
 var app = express();
 const parser = require('body-parser'); //Accessing builtin "body-parser" module to create middleware
-const routes = require('./routes/routesToDo'); //Accessing routesToDo module which created in routes directory
+// const routes = require('./routes/routesToDo'); //Accessing routesToDo module which created in routes directory
 
 app.set('view engine', 'html'); //Using html as view engine
 app.engine('.html', require('ejs').renderFile); //Rendering html file in ejs
@@ -22,3 +22,20 @@ app.use(require('./routes/routesToDo')); //Accessing routesToDo module which cre
 app.listen(port, () => {
 	console.log('Server is up on port '+port);
 });
+
+/**
+@description path for switching on environment (development/testing)
+*/
+switch(process.env.NODE_ENV) {
+	case 'development':
+	dirname = './todolist.json';
+	break;
+	case 'testing':
+	dirname = './todolisttest.json';
+	break;
+	
+	default:
+	console.log("Please provide proper environment");
+	}
+
+module.exports = {app}

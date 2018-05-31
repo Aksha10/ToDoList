@@ -35,6 +35,7 @@ function addnewtask(req, res) {
 		else {				
 			model.addnewtask(newTask).then(
 				function(data) {
+					console.log(data);				
 					res.send(data)
 					}
 				)
@@ -52,23 +53,8 @@ function addnewtask(req, res) {
 function deleteTask(req, res) {
 	var delText  = req.query.id; 
 	model.deleteTask(delText).then(
-		function(data){
-			res.send("successfully deleted");
-		}
-	)
-	.catch(function(error) {
-		if(err) throw err;
-	})
-}
-/**
- * @function mark(req,res)
- * @param {request object, server response object}:req, res
- */
-function mark(req,res) {
-	var idStatus  = req.query.id;
-	model.mark(idStatus).then(
-		function(data) {
-			res.send("id checked");
+		function(data){	
+			res.send(data.id);
 		}
 	)
 	.catch(function(error) {
@@ -81,8 +67,8 @@ function mark(req,res) {
  */
 function markall(req,res) {
 	model.markall().then(
-		function(data) {
-			res.send("mark all");
+		function(data) {		
+			res.send(data);
 		}
 	)
 	.catch(function(error) {
@@ -96,7 +82,22 @@ function markall(req,res) {
 function unmarkall(req,res) {
 	model.unmarkall().then(
 		function(data) {
-			res.send("unmark all");
+			res.send(data);
+		}
+	)
+	.catch(function(error) {
+		if(err) throw err;
+	})
+}
+/**
+ * @function mark(req,res)
+ * @param {request object, server response object}:req, res
+ */
+function mark(req,res) {
+	var idStatus  = req.query.id;
+	model.mark(idStatus).then(
+		function(data) {	
+			res.send(data);
 		}
 	)
 	.catch(function(error) {
@@ -110,7 +111,7 @@ function unmarkall(req,res) {
 function clrtask(req,res) {
 	model.clrtask().then(
 		function(data) {
-			res.send("clear tasks");
+			res.send(data);
 		}
 	)
 	.catch(function(error) {
@@ -138,6 +139,7 @@ function activetask(req,res) {
 function completeTask(req,res) {
 	model.completeTask().then(
 		function(data) {
+			console.log('hhhhhhhhhhh',data);		
 			res.send(data);
 		}
 	)
@@ -151,10 +153,10 @@ function completeTask(req,res) {
  */
 function inputTask(req,res) {
 	var updateId = req.params.id;
-	var updateInput = req.body;	
+	var updateInput = req.body;
 	model.inputTask(updateId, updateInput).then(
-		function(data) {
-			res.send(data.name);
+		function(data) {				
+			res.send(data);
 		}
 	)
 	.catch(function(error) {
