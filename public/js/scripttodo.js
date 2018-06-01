@@ -19,10 +19,10 @@ $(document).ready(function () {
 		else {
 			$("#warning").text(" ");
 			$.ajax({
+				url: 'http://localhost:3001/addNewTask',
 				type: 'POST',
 				data: JSON.stringify(data),
-				contentType: 'application/json',
-				url: 'http://localhost:3001/addNewTask',
+				contentType: 'application/json',				
 				success: function (data) {	
 					console.log(data);				
 					$("#ulItem").append("<li><input class='checkbox' type='checkbox'/><input class='input' data-id="+data.id+" value="+JSON.stringify(data.name)+"><button class='close' type='button'>&times;</button></li>")	
@@ -90,11 +90,17 @@ $(document).ready(function () {
 	 * @description remove mark when click on checkbox
 	 */
 	$(document).on('change', '.checkbox', function () {
+		var isChecked = $(this).attr('checked')?true:false;
+		console.log('checkbox status',isChecked);		
 		var markthis = $(this);
 		var statusId = $(this).closest("li").find('.input').attr("data-id");
+		console.log(statusId);	
+
 		$.ajax({
-			url: '/mark?id='+statusId,
+			url: '/mark',
 			type: 'PUT',
+			data: JSON.stringify({id:statusId, status:isChecked}),
+			contentType: 'application/json',
 			success: function() {	
 				if (markthis.is(':checked')) {
 					markthis.parent().addClass("liMarkAll");			

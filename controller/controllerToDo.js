@@ -94,7 +94,7 @@ function unmarkall(req,res) {
  * @param {request object, server response object}:req, res
  */
 function mark(req,res) {
-	var idStatus  = req.query.id;
+	var idStatus  = req.body;
 	model.mark(idStatus).then(
 		function(data) {	
 			res.send(data);

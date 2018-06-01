@@ -1,208 +1,233 @@
-const fs = require('fs')
-var path = require('path')
+var MongoClient = require('mongodb').MongoClient
+	, assert = require('assert');
+	// Connection URL
+var url = 'mongodb://localhost:27017/Todo';
 
-/**
- * @function getData(callback)
- * @description callback function for getData function
- * @param {function} callback 
-*/
-function getData(callback) {
+function mongoClient() {
 	return new Promise(function(resolve, reject) {
-		fs.readFile(dirname, 'utf-8',function (err, data) {
-			if (err) reject(err)
-			resolve(JSON.parse(data))
-		});
+		
+		MongoClient.connect(url, function (err, client) {
+			if(err) throw err;		
+	   	//success
+			db = client.db('Todo');
+			resolve(db)
+		})
 	})
 }
 /**
- * @function addnewtask(taskCallback)
- * @description callback function for addnewtask function
- * @param {function} taskCallback 
+ * @function getData()
+ * @description 
 */
-function addnewtask(newTask, taskCallback) {
+function getData() {
 	return new Promise(function(resolve, reject) {
-		fs.readFile(dirname, 'utf-8',function (err, data) {
-			if (err) reject(err);
+		mongoClient().then(function(err, success) {
+			db.collection('Table', function (err, collection) {
+				collection.find().toArray(function(err, documents) {
+					if(err) throw err; 
+					//success     
+					resolve(documents);          
+			 	});			 
+			});
+		})
+		.catch(function(err){
+			console.log(err);		
+		})
+		})
+}
+/**
+ * @function addnewtask()
+ * @description 
+*/
+function addnewtask(newTask) {
+	return new Promise(function(resolve, reject) {
+		mongoClient().then(function(err, success) { 
 			var taskid = Math.floor(Math.random() * 26) + Date.now()
-			var arrObj = JSON.parse(data)
-			var tempObj = {
-				name: newTask,
-				id: taskid,
-				status: false
-			}
-			arrObj.push(tempObj)
-			write(arrObj)
-			resolve(tempObj)
-		});
-	})	
+			db.collection('Table', function (err, collection) {
+				if(err) throw err;
+				var tempObj = {
+					name: newTask,
+					id: taskid,
+					status: false
+				}
+				collection.insert( { name: newTask,id: taskid,status: false },function(err, success) {
+					if(err) throw err;
+					resolve(tempObj); 
+				})				
+			})
+		})
+		.catch(function(err){
+			console.log(err);		
+		})	
+	})
 }
 /**
- * @function deleteTask(delText,deleteCallback)
- * @description callback function for delete function
- * @param {function} delText, deleteCallback 
+ * @function deleteTask()
+ * @description 
 */
-function deleteTask(delText, deleteCallback) {
+function deleteTask(delText) {
+	var id = parseFloat(delText)
 	return new Promise(function(resolve, reject) {
-		fs.readFile(dirname, 'utf-8', function (err, data) {
-			if (err) reject(err)
-			parseObj = JSON.parse(data)
-			removeElement = parseObj.filter(function(element) {
-				if(element.id!=delText){
-					return element
-				}
-			})	
-			write(removeElement)
-			resolve(removeElement)
-		});
+		mongoClient().then(function(err, success) {
+			db.collection('Table', function (err, collection) {
+				if(err) throw err;
+				collection.remove({ id:id}, function(err, success) {
+					if(err) throw err;
+					resolve("success"); 
+				});			
+			})
+		})
+		.catch(function(err){
+			console.log(err);		
+		})		
+	})		
+}
+
+/**
+ * @function markall()
+ * @description
+*/
+function markall() {
+	return new Promise(function(resolve, reject) {
+		mongoClient().then(function(err, success) {
+			db.collection('Table', function (err, collection) {
+				if(err) throw err;
+				collection.updateMany({}, {$set: { status : true }}, function(err, success) {
+					if(err) throw err;
+					resolve("success")
+				})		
+			})
+		})
+		.catch(function(err){
+			console.log(err);		
+		})
 	})
 }
 
 /**
- * @function markall(markallCallback)
- * @description callback function for markall function
- * @param {function} markallCallback 
+ * @function unmarkall()
+ * @description
 */
-function markall(markallCallback) {
+function unmarkall() {
 	return new Promise(function(resolve, reject) {
-		fs.readFile(dirname, 'utf-8', function (err, data) {
-			if(err) reject(err)
-			parseArrayObj = JSON.parse(data)
-				parseArrayObj.forEach(function(element) {
-					element.status = true				
-				});	
-			write(parseArrayObj)
-			resolve(parseArrayObj)
-		});
+		mongoClient().then(function(err, success) {
+			db.collection('Table', function (err, collection) {
+				if(err) throw err;
+				collection.updateMany({}, {$set: { status : false }}, function(err, success) {
+					if(err) throw err;
+					resolve("success")
+				})		
+			})
+		})
+		.catch(function(err){
+			console.log(err);		
+		})
 	})
 }
 /**
- * @function unmarkall(unmarkallCallback)
- * @description callback function for unmarkall function
- * @param {function} unmarkallCallback 
+ * @function mark()
+ * @description  
 */
-function unmarkall(unmarkallCallback) {
-	return new Promise(function(resolve, reject) {
-		fs.readFile(dirname, 'utf-8', function (err, data) {
-			if(err) reject(err)
-			arrayParse = JSON.parse(data)
-			arrayParse.forEach(function(element) {
-				element.status = false				
-			});	
-			write(arrayParse)
-			resolve(arrayParse)
-		});
-	})
-}
-/**
- * @function mark(idStatus,markCallback)
- * @description callback function for mark function
- * @param {function} idStatus, markCallback 
-*/
-function mark(idStatus, markCallback) {
+function mark(idStatus) {
+	var id = parseFloat(idStatus.id);
+	var status = idStatus.status;	
 	return new Promise(function(resolve, reject){
-		fs.readFile(dirname, 'utf-8', function (err, data) {
-			if(err) reject(err)
-			parseArray = JSON.parse(data)
-			function changeStatus(idStatus) {		
-				for (var i in parseArray) {
-					if (parseArray[i].id == idStatus) {
-						parseArray[i].status = !parseArray[i].status	
-						break; //Stop this loop, we found it!
-					}
-				}
-			}
-			changeStatus(idStatus)
-			write(parseArray)
-			resolve(parseArray)
-		});
+		mongoClient().then(function(err, success) {
+			db.collection('Table', function (err, collection) {
+				if(err) throw err;
+				collection.update({id : id},{$set: { status : status }} , function(err, success) {
+					if(err) throw err
+					resolve("success")
+				})			
+			})
+		})
+		.catch(function(err){
+			console.log(err);		
+		})
 	}) 
 }
 /**
- * @function clrtask(clrtaskCallback)
- * @description callback function for clrtask function
- * @param {function} clrtaskCallback 
+ * @function clrtask()
+ * @description 
 */
-function clrtask(clrtaskCallback) {
+function clrtask() {
 	return new Promise(function(resolve, reject) {
-		fs.readFile(dirname, 'utf-8', function (err, data) { 
-			if(err) reject(err)
-			clearParse = JSON.parse(data)
-			clearTask = clearParse.filter(function(element) {
-				if(element.status != true) {
-					return element
-				}
-			});	
-			write(clearTask)
-			resolve(clearTask)
-		});	
-	})	
+		mongoClient().then(function(err, success) {
+			db.collection('Table', function (err, collection) {
+				if(err) throw err;
+				collection.remove( { status:true }, function(err, success) {
+					if(err) throw err;
+					resolve("success"); 
+				});			
+			})
+		})
+		.catch(function(err){
+			console.log(err);		
+		})
+	})		
 }
 /**
- * @function activetask(activeCallback)
- * @description callback function for activetask function
- * @param {function} activeCallback 
+ * @function activetask()
+ * @description 
 */
-function activetask(activeCallback) {
+function activetask() {
 	return new Promise(function(resolve, reject) {
-		fs.readFile(dirname, 'utf-8', function (err, data) { 
-			if(err) reject(err)
-			activeParse = JSON.parse(data)
-			actvTask = activeParse.filter(function(element) {
-				if(element.status == false){
-					return element
-				}
-			}) 
-			resolve(actvTask)	
-		});
+		mongoClient().then(function(err, success) {
+			db.collection('Table', function (err, collection) {
+				if(err) throw err;
+				collection.find({ status: false }).toArray(function(err, documents) {
+					if(err) throw err; 
+					//success     
+					resolve(documents);          
+			 	});			 
+			});
+		})
+		.catch(function(err){
+			console.log(err);		
+		})
 	})
 }
 /**
- * @function completeTask(completeCallback)
- * @description callback function for completeTask function
- * @param {function} completeCallback 
+ * @function completeTask()
+ * @description  
 */
-function completeTask(completeCallback) {
+function completeTask() {
 	return new Promise(function(resolve, reject) {
-		fs.readFile(dirname, 'utf-8', function (err, data) { 
-			if(err) reject(err)
-			completeParse = JSON.parse(data)					
-			cmpltTask = completeParse.filter(function(element) {
-				if(element.status == true){
-					return element
-				}
-			}) 
-			console.log('tttttt',cmpltTask);			
-			resolve(cmpltTask)		
-		});
-	})	
+		mongoClient().then(function(err, success) { 
+			db.collection('Table', function (err, collection) {
+				if(err) throw err;
+				collection.find({ status: true }).toArray(function(err, documents) {
+					if(err) throw err; 
+					//success     
+					resolve(documents);          
+			 	});			 
+			});
+		})
+		.catch(function(err){
+			console.log(err);		
+		})
+	})
 }
 /**
- * @function inputTask(updateId,updateInput,inputCallback)
- * @description callback function for inputTask function
- * @param {function} updateId, updateInput, inputCallback 
+ * @function inputTask(updateId,updateInput)
+ * @description
 */
-function inputTask(updateId, updateInput, inputCallback) {
+function inputTask(updateId, updateInput) {
+	var id = parseFloat(updateId);
+	var name = updateInput.name;
 	return new Promise(function(resolve, reject){
-		fs.readFile(dirname, 'utf-8', function (err, data) { 
-			if(err) reject(err)
-			inputParse = JSON.parse(data)			
-			function changeName(updateId, updateInput) {	
-				for (var i in inputParse) {
-					if (inputParse[i].id == updateId) {
-						inputParse[i].name = updateInput.name	
-						break; //Stop this loop, we found it!
-					}
-				}
-			}
-			changeName(updateId, updateInput)
-			write(inputParse)
-			resolve(updateInput)
-		});
+		mongoClient().then(function(err, success) {  
+			db.collection('Table', function (err, collection) {
+				if(err) throw err;
+				collection.update( {id:id},{$set:{ name: name}},function(err, success) {
+					if(err) throw err;
+					resolve(name); 
+				});
+			})
+		})
+		.catch(function(err){
+			console.log(err);		
+		})
 	})
 }
 
-function write(writeData) {
-	fs.writeFile(dirname, JSON.stringify(writeData), 'utf-8', function (err, data) {
-	});
-}
 module.exports = { getData, addnewtask, deleteTask, mark, markall, unmarkall, clrtask, activetask, completeTask, inputTask } //Exporting Modules	
